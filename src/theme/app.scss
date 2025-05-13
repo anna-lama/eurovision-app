@@ -1,0 +1,114 @@
+@use "sass:color";
+
+//$page          : #008080;
+$primary       : #0da8af;
+$secondary     : #F00B8C;
+$foreground    : #121212;
+$page          : #F6F1F4;
+
+$border-radius : 5px;
+
+$accent        : #9C27B0;
+$dark          : #1D1D1D;
+$positive  : #21BA45;
+$negative  : #C10015;
+$info      : #31CCEC;
+$warning   : #F2C037;
+
+$border-radius: 5px;
+
+$font-size-base: 16pt;
+
+
+.btn {
+  font-size: large;
+  font-weight: 600;
+  border: none;
+  border-radius: $border-radius;
+  padding: 8px;
+  height: 45px;
+  transition: all 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+
+  &:not(:disabled){
+    cursor: pointer;
+  }
+  &:disabled {
+    opacity: 0.75;
+  }
+  &.btn-primary {
+    background-color: $primary;
+
+    &:focus {
+      box-shadow: 0 0 5px 5px rgba($primary, 0.3);
+    }
+    &:not(:disabled):hover  {
+      background-color: color.scale($primary, $lightness: -20%);
+    }
+  }
+  &.btn-secondary {
+    background-color: $secondary;
+
+    &:focus {
+      box-shadow: 0 0 5px 5px rgba($secondary, 0.3);
+    }
+    &:not(:disabled):hover  {
+      background-color: color.scale($secondary, $lightness: -20%);
+    }
+  }
+  &.btn-success {
+    background-color: $positive;
+    font-weight: bold;
+
+    &:focus {
+      box-shadow: 0 0 5px 5px rgba($positive, 0.3);
+    }
+    &:not(:disabled):hover{
+      background-color: color.scale($positive, $lightness: -20%);
+    }
+  }
+  &.btn-warning {
+    background-color: $warning;
+    font-weight: bold;
+
+    &:focus {
+      box-shadow: 0 0 5px 5px rgba($warning, 0.3);
+    }
+    &:not(:disabled):hover{
+      background-color: color.scale($warning, $lightness: -20%);
+    }
+  }
+  &.btn-error {
+    background-color: $negative;
+    font-weight: bold;
+
+    &:focus {
+      box-shadow: 0 0 5px 5px rgba($negative, 0.3);
+    }
+    &:not(:disabled):hover{
+      background-color: color.scale($negative, $lightness: -20%);
+    }
+  }
+  &.btn.loading {
+    color: transparent;
+    pointer-events: none;
+    border-radius: 200px;
+    width: calc-size(auto, size);
+    transition: width 0.5s ease;
+
+    &:before {
+      content: "";
+      width: 0.7rem;
+      height: 0.7rem;
+      border: 4px solid white;
+      border-top: 4px solid transparent;
+      border-radius: 50%;
+      animation: spin 2s linear infinite;
+    }
+  }
+}
+
+

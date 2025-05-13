@@ -1,0 +1,49 @@
+/* For information on how to create your own theme, please see:
+http://ionicframework.com/docs/theming/ */
+.page{
+    display: grid;
+    grid-template-rows: auto 1fr;
+    opacity: 0.7;
+    z-index: 1;
+    height: 100vh;
+}
+.container {
+    height: 100%;
+    background-image: url("../../public/back.jpg");
+    background-size: 150%;  /* rimpicciolisce (zoom out) */
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 700px;
+    row-gap: 50px;
+    background: black;
+    padding: 30px 10px;
+    border-radius: 3px;
+}
+
+.title {
+    color: #F6F1F4;
+    font-size: 30px;
+}
+
+.round{
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    background-color: #F6F1F4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #223344;
+    font-size:25px;
+}
+
