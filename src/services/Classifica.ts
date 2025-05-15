@@ -14,4 +14,10 @@ export default class Classifica extends BaseService {
             method: 'GET'
         })
     }
+    static async getClassificaTotale(): Promise<any> {
+        return await this.perform({
+            url: '/classifica/',
+            method: 'GET'
+        })
+    }
 }

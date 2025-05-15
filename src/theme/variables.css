@@ -47,3 +47,76 @@ http://ionicframework.com/docs/theming/ */
     font-size:25px;
 }
 
+/*CLASSIFICA*/
+
+
+.classifica-container {
+    /*background: linear-gradient(135deg, #0da8af, #F00B8C);*/
+    /*opacity: 0.6;*/
+    background-color: #354659;
+    font-family: 'Inter', sans-serif;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
+
+
+.cards-wrapper {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+}
+
+.card {
+    background: #223344;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 20px;
+    border-top: 1px solid #354659;
+}
+
+.number-container {
+    color: #F6F1F4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+    margin-left: -18px;
+    transform: skew(-12deg);
+    height: 100%;
+}
+.posizione{
+    font-size: 70px;
+    font-weight: bold;
+    font-style: italic;
+    font-family: 'Oswald', sans-serif;
+    color: #F6F1F4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.header-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+}
+
+.no-data {
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    margin-top: 2rem;
+}

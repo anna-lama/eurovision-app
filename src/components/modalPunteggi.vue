@@ -15,10 +15,9 @@
                                 @click="setRating(item.key, i - 1)"
                                 class="rate"
                                 :class="{ clicked : rating[item.key] === (i - 1) }">
-                                <!--                                :style="{ backgroundColor: rating[item.key] === (i - 1) ? '#0da8af' : '#F00B8C'}"-->
-
                                 {{ i - 1 }}
                             </div>
+                            {{ rating[item.key] }}
                         </div>
                     </div>
 
@@ -37,9 +36,9 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive } from 'vue'
+import {defineProps, defineEmits, reactive, onUnmounted, watch, ref} from 'vue'
 import Punteggio from "@/services/Punteggio.ts";
-const props = defineProps(["isOpen", "idEsibizione"])
+const props = defineProps(["isOpen", "esibizione"])
 
 const emit = defineEmits(['close'])
 
@@ -51,7 +50,7 @@ const categories = [
     { label: 'Interpretazione', key: 'interpretazione', icon: 'movie' },
     { label: 'Outfit', key: 'outfit', icon: 'checkroom' }
 ]
-let rating = reactive({
+let rating = ref({
     canzone: null,
     coreografia: null,
     scenografia: null,
@@ -59,12 +58,27 @@ let rating = reactive({
     outfit: null
 })
 
+watch(() => props.esibizione, (newVal) => {
+    if (newVal && newVal.punteggi && newVal.punteggi[0]) {
+        rating.value.canzone=newVal.punteggi[0].canzone
+        rating.value.coreografia= newVal.punteggi[0].coreografia
+        rating.value.scenografia= newVal.punteggi[0].scenografia
+        rating.value.interpretazione= newVal.punteggi[0].interpretazione
+        rating.value.outfit= newVal.punteggi[0].outfit
+        console.log("entro nell'if del watch", )
+    }
+}, { immediate: true });
+
+
 // Funzione per aggiornare il voto
 function setRating(categoryKey, value) {
-    rating[categoryKey] = value
+    console.log("test", categoryKey, value)
+    rating.value[categoryKey] = value
+    console.log("test2", rating.value[categoryKey])
+
 }
 function close() {
-    rating = {
+    rating.value = {
         canzone: null,
         coreografia: null,
         scenografia: null,
@@ -75,12 +89,12 @@ function close() {
 }
 
 const inserisciPunteggio = async () => {
-    if(Object.values(rating).every(val => typeof val === 'number')){
+    if(Object.values(rating.value).every(val => typeof val === 'number')){
         const idUtente = sessionStorage.getItem('user')
         const body = {
-            ...rating,
+            ...rating.value,
             utente: idUtente,
-            esibizione: props.idEsibizione
+            esibizione: props.esibizione.id
         }
         const response = await Punteggio.aggiungiPunteggio(body)
         if (!response.error){
@@ -88,7 +102,6 @@ const inserisciPunteggio = async () => {
         }
     }
 }
-
 </script>
 
 <style scoped>

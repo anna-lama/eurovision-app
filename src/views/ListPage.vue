@@ -8,13 +8,16 @@
                     <i>{{esibizioneInCorso.titolo}}</i>
                 </div>
                 <div>
-                    <button class="btn btn-primary" @click="openModal=true">Inserisci Voti</button>
+                    <button class="btn btn-primary" @click="openModalFunction(esibizioneInCorso)">Inserisci Voti</button>
                 </div>
             </div>
             <div style="overflow:scroll">
                 <div class="card-list">
                     <div v-for="(record,index) of punteggi" class="card"
-                         :style="{ gridTemplateRows : record.punteggi[0].totale && !record.inCorso ? '1fr auto' : '1fr'}" :key="index">
+                         :style="{ gridTemplateRows : record.punteggi[0].totale && !record.inCorso ? '1fr auto' : '1fr'}"
+                         @touchstart="startPress(record)"
+                         @touchend="cancelPress"
+                         :key="index">
                         <div class="card-header">
                             <div style="height: 100%; display: flex; align-items: start; font-size: 25px">
                                 <span class="title" style="font-size: 29px">{{index+1}}.</span>
@@ -42,7 +45,7 @@
         </div>
     </div>
     </div>
-    <modal v-if="esibizioneInCorso" :is-open="openModal" :id-esibizione="esibizioneInCorso.id" @close="closeModal"></modal>
+    <modal v-if="esibizioneModal" :is-open="openModal" :esibizione="esibizioneModal" @close="closeModal"></modal>
 </template>
 
 <script setup lang="ts">
@@ -52,8 +55,10 @@ import Modal from "@/components/modalPunteggi.vue";
 import CategoryPoints from "@/components/category-points.vue";
 
 const openModal = ref(false)
+const pressTimer = ref<any>(0)
 const punteggi = ref([])
 const esibizioneInCorso = ref(null)
+const esibizioneModal = ref(null)
 // const mainStore = useMainStore()
 
 onMounted( async()=>{
@@ -72,6 +77,20 @@ const getList = async () => {
 const closeModal = async () => {
     openModal.value = false
     await getList()
+}
+const openModalFunction = async (esibizione) => {
+    esibizioneModal.value = esibizione
+    openModal.value = true
+}
+
+function startPress(esibizione) {
+    pressTimer.value = setTimeout(() => {
+        openModalFunction(esibizione)
+    }, 800) // durata in ms
+}
+
+function cancelPress() {
+    clearTimeout(pressTimer.value)
 }
 </script>
 
