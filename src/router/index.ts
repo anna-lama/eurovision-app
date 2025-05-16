@@ -4,6 +4,7 @@ import HomePage from "../views/HomePage.vue"
 import ListPage from "@/views/ListPage.vue";
 import ClassificaParziale from "@/views/ClassificaParziale.vue";
 import ClassificaTotale from "@/views/ClassificaTotale.vue";
+import AdminPage from "@/views/AdminPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -25,6 +26,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/totale',
     name: 'Totale',
     component: ClassificaTotale
+  },
+  {
+    path: '/dashboardnascosta',
+    name: 'AdminPage',
+    component: AdminPage
   }
 ]
 
