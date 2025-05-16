@@ -8,8 +8,8 @@
                 <div style="position: relative">
                     <div class="number-container" :style="{backgroundColor: canzone.totale != 0 ? getColorClassifica(index) : '#354659'}">
                     </div>
-                    <div class="posizione">
-                        {{canzone.totale != 0 ? index+1+'°' : '_'}}
+                    <div class="posizione" :style="{ top : !canzone.totale ? '8px' : '-3px'}">
+                        {{canzone.totale != 0 ? index+1+'°' : '-'}}
                     </div>
                 </div>
                 <div style="padding: 5px 0;">

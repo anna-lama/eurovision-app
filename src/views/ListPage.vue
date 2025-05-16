@@ -1,5 +1,5 @@
 <template>
-    <div class="list_page">
+    <div class="list_page" v-if="punteggi.length>0">
         <div style="display: grid; grid-template-rows: auto 1fr; height: 100%">
             <div v-if="esibizioneInCorso" class="main-card inCorso">
                 <div class="header">
@@ -13,7 +13,7 @@
             </div>
             <div style="overflow:scroll">
                 <div class="card-list">
-                    <div v-for="(record,index) of punteggi" class="card"
+                    <div v-for="(record,index) of punteggi" class="card-scaletta"
                          :style="{ gridTemplateRows : record.punteggi[0].totale && !record.inCorso ? '1fr auto' : '1fr'}"
                          @touchstart="startPress(record)"
                          @touchend="cancelPress"
@@ -26,7 +26,6 @@
                                 <span class="title">{{ record.nazione }} </span>
                                 <span>{{record.cantante}}</span>
                                 <i>{{record.titolo}}</i>
-
                             </div>
                             <div v-if="record.inCorso">
                                 <span >In corso</span>
@@ -40,12 +39,19 @@
                             :punteggi="record.punteggi[0]"
                             style="padding: 15px 0 5px 0;"
                         ></category-points>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
+    <div v-else style="height : 100%; display: flex; align-items: center; justify-content: center">
+        La classifica non è stata inserita
+        {{punteggi.length}}
     </div>
     <modal v-if="esibizioneModal" :is-open="openModal" :esibizione="esibizioneModal" @close="closeModal"></modal>
+    <ion-toast :is-open="openToast" :message="errormsg" :duration="2000"></ion-toast>
+
 </template>
 
 <script setup lang="ts">
@@ -53,13 +59,15 @@ import {onMounted, ref} from "vue";
 import Classifica from "@/services/Classifica";
 import Modal from "@/components/modalPunteggi.vue";
 import CategoryPoints from "@/components/category-points.vue";
+import {IonToast} from "@ionic/vue";
 
 const openModal = ref(false)
 const pressTimer = ref<any>(0)
 const punteggi = ref([])
-const esibizioneInCorso = ref(null)
+const esibizioneInCorso = ref({})
 const esibizioneModal = ref(null)
-// const mainStore = useMainStore()
+const openToast = ref(false)
+const errormsg = ref()
 
 onMounted( async()=>{
     await getList()
@@ -71,6 +79,9 @@ const getList = async () => {
         if (!response.error) {
             punteggi.value = response.data
             esibizioneInCorso.value = punteggi.value.find(x => x.inCorso)
+        } else {
+            errormsg.value = response.msg
+            openToast.value = true
         }
     }
 }
@@ -104,7 +115,7 @@ function cancelPress() {
     align-items: center;
 }
 
-.card{
+.card-scaletta{
     background-color: #223344;
     border-radius: 3px;
     padding: 10px;
@@ -116,6 +127,7 @@ function cancelPress() {
     grid-template-columns: auto 1fr auto;
     column-gap: 8px;
     align-items: center;
+    width: 100%;
 }
 
 .header {

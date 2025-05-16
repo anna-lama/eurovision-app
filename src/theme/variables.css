@@ -99,11 +99,10 @@ http://ionicframework.com/docs/theming/ */
     color: #F6F1F4;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: end;
     padding: 0 10px;
     position: absolute;
     z-index: 3;
-    top: 0;
     width: 100%;
     height: 100%;
 }

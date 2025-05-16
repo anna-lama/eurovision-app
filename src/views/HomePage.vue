@@ -33,7 +33,6 @@ import { IonToast } from '@ionic/vue';
 import {reactive, ref} from "vue";
 import Utenti from "@/services/Utenti";
 import router from "@/router";
-import {useMainStore} from "@/store/mainStore";
 const openToast = ref(false)
 const errormsg = ref()
 const user = reactive<any>({
@@ -41,7 +40,6 @@ const user = reactive<any>({
     pin: null
 })
 const showPassword = ref()
-const mainStore = useMainStore()
 const registrati = async () => {
     const isValid = checkCampi()
     if (isValid){
@@ -50,7 +48,6 @@ const registrati = async () => {
             response = await Utenti.aggiungiUtente(user.username,user.pin)
             if (!response.error) {
                 await sessionStorage.setItem("user", response.data.id)
-                await mainStore.setUserLogged(response.data)
                 await router.push('/')
             } else {
                 errormsg.value = response.msg
@@ -73,7 +70,6 @@ const login = async () => {
             response = await Utenti.login(user.username, user.pin)
             if (!response.error) {
                 await sessionStorage.setItem("user", response.data.id)
-                await mainStore.setUserLogged(response.data)
                 await router.push('/')
             } else {
                 errormsg.value = response.msg
@@ -97,6 +93,11 @@ const checkCampi = () => {
     }
     if (user.pin.length < 4){
         errormsg.value = "La password è troppo corta"
+        openToast.value = true
+        return false
+    }
+    if (user.pin.length > 4){
+        errormsg.value = "La password è troppo lunga"
         openToast.value = true
         return false
     }

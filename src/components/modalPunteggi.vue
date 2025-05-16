@@ -17,7 +17,6 @@
                                 :class="{ clicked : rating[item.key] === (i - 1) }">
                                 {{ i - 1 }}
                             </div>
-                            {{ rating[item.key] }}
                         </div>
                     </div>
 
