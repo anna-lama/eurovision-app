@@ -41,5 +41,8 @@
     "vitest": "^0.34.6",
     "vue-tsc": "^2.1.10"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-arm64-musl": "^4.40.2"
+  },
   "description": "An Ionic project"
 }
