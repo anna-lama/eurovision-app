@@ -39,7 +39,6 @@ L'app sarà disponibile su `http://localhost:5173` (di default).
 
 - **@ionic/vue** – Supporto Vue per Ionic
 - **vue-router** – Routing ufficiale Vue
-- **pinia** – Gestione stato moderna per Vue
 - **axios** – HTTP client
 
 ## 📱 Build mobile (opzionale)
