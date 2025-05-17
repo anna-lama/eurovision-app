@@ -20,4 +20,13 @@ export default class Classifica extends BaseService {
             method: 'GET'
         })
     }
+    static async abilitaTotale(total: boolean): Promise<any> {
+        return await this.perform({
+            url: '/config/change',
+            method: 'PATCH',
+            params:{
+                total : total
+            }
+        })
+    }
 }

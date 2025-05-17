@@ -15,7 +15,7 @@ export type APIResponse = {
     msg: string,
     data: any
 };
-const baseUrl = "http://192.168.1.102:3000"
+const baseUrl = "https://evb.sceltaintelligente.it"
 class BaseService {
     static async perform(request: HttpRequest):Promise<APIResponse> {
         try {
@@ -24,7 +24,6 @@ class BaseService {
                 method: request.method,
                 headers: {
                     'Cache-Control': 'no-cache',
-                    // "Accept-Version": "1.0.0",
                     "authorization": sessionStorage.getItem('token')
                 },
                 data: request.body,

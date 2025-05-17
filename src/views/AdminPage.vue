@@ -4,7 +4,10 @@
             <span>Dashboard</span>
         </div>
         <div class="flexbox">
-            <button class="btn btn-success" style="width: 90%">Abilita Totale</button>
+            <button class="btn btn-success"
+                    style="width: 90%"
+                    @click="abilitaTotale"
+            >{{ isAvailable ? 'Disabilita': 'Abilita' }} Totale </button>
         </div>
 
         <div>
@@ -32,13 +35,16 @@
 import {onMounted, ref} from "vue";
 import Utenti from "@/services/Utenti";
 import {IonToast, IonCheckbox} from "@ionic/vue";
+import Classifica from "@/services/Classifica";
 const openToast = ref(false)
 const errormsg = ref()
+const isAvailable = ref(false)
 
 const utenti = ref([])
 
 onMounted(async ()=> {
     await getUtenti()
+    await getClassificaTotale()
 })
 const getUtenti = async () => {
     const response = await Utenti.listaUtenti()
@@ -56,6 +62,27 @@ const modificaUtente = async (utente)=> {
         errormsg.value = response.msg
         openToast.value = true
     }
+}
+
+const getClassificaTotale = async () => {
+    const response = await Classifica.getClassificaTotale()
+    if (!response.error) {
+        isAvailable.value = response.data.votanti != 100;
+    } else {
+        console.log("Errore")
+
+    }
+}
+const abilitaTotale = async () => {
+    const value = !isAvailable.value
+    const response = await Classifica.abilitaTotale(value)
+    if (!response.error) {
+        await getClassificaTotale()
+        errormsg.value = "Chiamata riuscita"
+    } else {
+        errormsg.value = "Errore"+response.msg
+    }
+    openToast.value = true
 }
 </script>
 

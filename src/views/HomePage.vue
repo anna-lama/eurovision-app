@@ -1,6 +1,8 @@
 <template>
     <div class="login">
-        <div class="form-container">
+        <div id="header" style="width: 100%"></div>
+
+        <div class="form-container" >
             <div style="display: flex; justify-content: center">
                 <span style="font-size: large">Inserisci un nome e un pin di 4 cifre</span>
             </div>
@@ -23,7 +25,8 @@
         </div>
     </div>
 
-    <ion-toast :is-open="openToast" :message="errormsg" :duration="2000"></ion-toast>
+    <ion-toast class="custom-toast" position="top" position-anchor="header"
+               :is-open="openToast" :message="errormsg" :duration="2000"></ion-toast>
 
 </template>
 
@@ -41,7 +44,7 @@ const user = reactive<any>({
 })
 const showPassword = ref()
 const registrati = async () => {
-    const isValid = checkCampi()
+    const isValid = checkCampiRegister()
     if (isValid){
         let response
         try {
@@ -58,12 +61,10 @@ const registrati = async () => {
             openToast.value = true
         }
     }
-
-
 }
 
 const login = async () => {
-    const isValid = checkCampi()
+    const isValid = checkCampiLogin()
     if (isValid){
         let response
         try {
@@ -82,7 +83,7 @@ const login = async () => {
     }
 }
 
-const checkCampi = () => {
+const checkCampiRegister = () => {
     openToast.value = false
     errormsg.value = ""
 
@@ -91,13 +92,35 @@ const checkCampi = () => {
         openToast.value = true
         return false
     }
+    if (user.username.length < 3){
+        errormsg.value = "Eddai almeno 3 cifre"
+        openToast.value = true
+        return false
+    }
     if (user.pin.length < 4){
-        errormsg.value = "La password è troppo corta"
+        errormsg.value = "Il PIN è troppo corto"
         openToast.value = true
         return false
     }
     if (user.pin.length > 4){
-        errormsg.value = "La password è troppo lunga"
+        errormsg.value = "Il PIN è troppo lungo"
+        openToast.value = true
+        return false
+    }
+    return true
+}
+
+const checkCampiLogin = () => {
+    openToast.value = false
+    errormsg.value = ""
+
+    if (!user.username || !user.pin){
+        errormsg.value = "Compila tutti i campi, grazie"
+        openToast.value = true
+        return false
+    }
+    if (user.pin.length !== 4){
+        errormsg.value = "Il PIN non è corretto"
         openToast.value = true
         return false
     }
@@ -161,4 +184,30 @@ const checkCampi = () => {
     padding: 0 25px;
     overflow: hidden;
 }
+
+@media (min-width: 820px) {
+    .login{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 25px;
+        overflow: hidden;
+        align-items: center;
+    }
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        width: 700px;
+        row-gap: 50px;
+        background: black;
+        padding: 30px 10px;
+        border-radius: 3px;
+    }
+}
+
+
+
 </style>

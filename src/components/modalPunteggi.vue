@@ -64,17 +64,13 @@ watch(() => props.esibizione, (newVal) => {
         rating.value.scenografia= newVal.punteggi[0].scenografia
         rating.value.interpretazione= newVal.punteggi[0].interpretazione
         rating.value.outfit= newVal.punteggi[0].outfit
-        console.log("entro nell'if del watch", )
     }
 }, { immediate: true });
 
 
 // Funzione per aggiornare il voto
 function setRating(categoryKey, value) {
-    console.log("test", categoryKey, value)
     rating.value[categoryKey] = value
-    console.log("test2", rating.value[categoryKey])
-
 }
 function close() {
     rating.value = {

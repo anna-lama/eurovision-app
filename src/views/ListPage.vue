@@ -11,9 +11,10 @@
                     <button class="btn btn-primary" @click="openModalFunction(esibizioneInCorso)">Inserisci Voti</button>
                 </div>
             </div>
-            <div style="overflow:scroll">
+            <div style="overflow:scroll" id="header">
                 <div class="card-list">
                     <div v-for="(record,index) of punteggi" class="card-scaletta"
+                         :id="record.inCorso ? 'current-card' : 'not-current' "
                          :style="{ gridTemplateRows : record.punteggi[0].totale && !record.inCorso ? '1fr auto' : '1fr'}"
                          @touchstart="startPress(record)"
                          @touchend="cancelPress"
@@ -47,10 +48,10 @@
     </div>
     <div v-else style="height : 100%; display: flex; align-items: center; justify-content: center">
         La classifica non è stata inserita
-        {{punteggi.length}}
     </div>
     <modal v-if="esibizioneModal" :is-open="openModal" :esibizione="esibizioneModal" @close="closeModal"></modal>
-    <ion-toast :is-open="openToast" :message="errormsg" :duration="2000"></ion-toast>
+    <ion-toast class="custom-toast" position="top" position-anchor="header"
+               :is-open="openToast" :message="errormsg" :duration="2000"></ion-toast>
 
 </template>
 
@@ -71,7 +72,16 @@ const errormsg = ref()
 
 onMounted( async()=>{
     await getList()
+    scrollToAnchor()
 })
+
+const scrollToAnchor = () =>{
+    const el = document.getElementById(`current-card`);
+    if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
 const getList = async () => {
     const user = await sessionStorage.getItem("user")
     if (user){
@@ -90,8 +100,10 @@ const closeModal = async () => {
     await getList()
 }
 const openModalFunction = async (esibizione) => {
-    esibizioneModal.value = esibizione
-    openModal.value = true
+    if(await getClassificaTotale()){
+        esibizioneModal.value = esibizione
+        openModal.value = true
+    }
 }
 
 function startPress(esibizione) {
@@ -103,6 +115,16 @@ function startPress(esibizione) {
 function cancelPress() {
     clearTimeout(pressTimer.value)
 }
+
+const getClassificaTotale = async () => {
+    const response = await Classifica.getClassificaTotale()
+    if (!response.error) {
+        return response.data.votanti === 100;
+    } else {
+        console.log("Errore")
+    }
+}
+
 </script>
 
 <style scoped >
@@ -120,6 +142,13 @@ function cancelPress() {
     border-radius: 3px;
     padding: 10px;
     display: grid;
+    transition: transform ease 0.8s;
+
+    &:active {
+        background-color: #1f2d3a;
+        transform: scale(0.98);
+
+    }
 }
 
 .card-header {
