@@ -20,8 +20,9 @@ onMounted(async ()=> {
 })
 const getClassificaParziale = async () => {
     const idUtente = await sessionStorage.getItem('user')
-    if (idUtente) {
-        const response = await Classifica.getClassificaParziale(Number(idUtente))
+    const competizione = await sessionStorage.getItem('competizione')
+    if (idUtente && competizione) {
+        const response = await Classifica.getClassificaParziale(Number(idUtente), Number(competizione))
         if (!response.error) {
             classifica.value = response.data
         } else {

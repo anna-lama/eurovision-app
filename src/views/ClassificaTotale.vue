@@ -23,14 +23,15 @@ onMounted(async ()=> {
     await getClassificaTotale()
 })
 const getClassificaTotale = async () => {
-        const response = await Classifica.getClassificaTotale()
+        const competizione = await sessionStorage.getItem('competizione')
+        if (!competizione) {
+            isAvailable.value = false
+            return
+        }
+        const response = await Classifica.getClassificaTotale(Number(competizione))
         if (!response.error) {
-            if (response.data.votanti == 100){
-                isAvailable.value = false
-            } else {
-                isAvailable.value = true
-                classifica.value = response.data.classifica
-            }
+            classifica.value = response.data.classifica
+            isAvailable.value = response.data.classifica.length > 0
         } else {
             console.log("Errore")
 

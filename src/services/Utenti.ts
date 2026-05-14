@@ -11,9 +11,9 @@ export default class Utenti extends BaseService {
             }
         })
     }
-    static async listaUtenti(): Promise<any> {
+    static async listaUtenti(competizione: number): Promise<any> {
         return await this.perform({
-            url: '/utenti/lista',
+            url: '/utenti/competizione/' + competizione,
             method: 'GET'
         })
     }

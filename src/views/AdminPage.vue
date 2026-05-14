@@ -3,9 +3,27 @@
         <div class="container-title">
             <span>Dashboard</span>
         </div>
+        <div class="competition-filter">
+            <label for="competizione-admin">Competizione</label>
+            <select
+                id="competizione-admin"
+                v-model="competizioneSelezionata"
+                class="competition-select"
+                @change="onCompetizioneChange"
+            >
+                <option
+                    v-for="competizione of competizioni"
+                    :key="competizione.id"
+                    :value="competizione.id"
+                >
+                    {{ competizione.nome }}
+                </option>
+            </select>
+        </div>
         <div class="flexbox">
             <button class="btn btn-success"
                     style="width: 90%"
+                    :disabled="!competizioneSelezionata"
                     @click="abilitaTotale"
             >{{ isAvailable ? 'Disabilita': 'Abilita' }} Totale </button>
         </div>
@@ -19,7 +37,9 @@
                 <div>{{ utente.nome }}</div>
                 <div>{{ utente.pin }}</div>
                 <div class="flexbox">
-                    <ion-checkbox v-model="utente.allInserted" @ionChange="modificaUtente(utente)"></ion-checkbox>
+                    <span :class="utente.allInserted ? 'status-ok' : 'status-ko'">
+                        {{ utente.allInserted ? 'Completo' : 'Manca' }}
+                    </span>
                 </div>
             </div>
 
@@ -34,20 +54,59 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
 import Utenti from "@/services/Utenti";
-import {IonToast, IonCheckbox} from "@ionic/vue";
+import {IonToast} from "@ionic/vue";
 import Classifica from "@/services/Classifica";
+import Competizioni from "@/services/Competizioni";
 const openToast = ref(false)
 const errormsg = ref()
 const isAvailable = ref(false)
 
-const utenti = ref([])
+const utenti = ref<any[]>([])
+const competizioni = ref<any[]>([])
+const competizioneSelezionata = ref<number | null>(null)
 
 onMounted(async ()=> {
-    await getUtenti()
-    await getClassificaTotale()
+    await getCompetizioni()
 })
+const getCompetizioni = async () => {
+    const response = await Competizioni.getCompetizioniAdmin()
+    if (!response.error) {
+        competizioni.value = response.data
+        const competizioneSessione = JSON.parse(sessionStorage.getItem('competizione') || 'null')?.id
+        const competizioneInSessione = competizioni.value.find((competizione) => competizione.id === competizioneSessione)
+        const competizioneDefault = competizioneInSessione ?? competizioni.value[0]
+
+        if (competizioneDefault) {
+            competizioneSelezionata.value = competizioneDefault.id
+            setTotaleFromCompetizione()
+            await refreshDatiCompetizione()
+        }
+    } else {
+        errormsg.value = response.msg
+        openToast.value = true
+    }
+}
+
+const onCompetizioneChange = async () => {
+    setTotaleFromCompetizione()
+    await refreshDatiCompetizione()
+}
+
+const refreshDatiCompetizione = async () => {
+    await getUtenti()
+}
+
+const setTotaleFromCompetizione = () => {
+    const competizione = competizioni.value.find((item) => item.id === Number(competizioneSelezionata.value))
+    isAvailable.value = Boolean(competizione?.abilitaTotale)
+}
+
 const getUtenti = async () => {
-    const response = await Utenti.listaUtenti()
+    if (!competizioneSelezionata.value) {
+        utenti.value = []
+        return
+    }
+    const response = await Utenti.listaUtenti(Number(competizioneSelezionata.value))
     if (!response.error) {
         utenti.value = response.data
     } else {
@@ -56,28 +115,19 @@ const getUtenti = async () => {
     }
 }
 
-const modificaUtente = async (utente)=> {
-    const response = await Utenti.modificaUtente(utente.id, utente.allInserted)
-    if (!response.error) {
-        errormsg.value = response.msg
-        openToast.value = true
-    }
-}
-
-const getClassificaTotale = async () => {
-    const response = await Classifica.getClassificaTotale()
-    if (!response.error) {
-        isAvailable.value = response.data.votanti != 100;
-    } else {
-        console.log("Errore")
-
-    }
-}
 const abilitaTotale = async () => {
+    if (!competizioneSelezionata.value) {
+        return
+    }
     const value = !isAvailable.value
-    const response = await Classifica.abilitaTotale(value)
+    const response = await Classifica.abilitaTotale(Number(competizioneSelezionata.value), value)
     if (!response.error) {
-        await getClassificaTotale()
+        const competizione = competizioni.value.find((item) => item.id === Number(competizioneSelezionata.value))
+        if (competizione) {
+            competizione.abilitaTotale = value
+        }
+        isAvailable.value = value
+        await refreshDatiCompetizione()
         errormsg.value = "Chiamata riuscita"
     } else {
         errormsg.value = "Errore"+response.msg
@@ -128,6 +178,33 @@ $secondary     : #F00B8C;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.competition-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 20px;
+}
+
+.competition-select {
+    min-height: 42px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background: #1f2d3a;
+    color: #F6F1F4;
+    padding: 0 10px;
+    font-size: 16px;
+}
+
+.status-ok {
+    color: #32d74b;
+    font-weight: 700;
+}
+
+.status-ko {
+    color: #ff9f0a;
+    font-weight: 700;
 }
 
 </style>
