@@ -2,15 +2,15 @@ import BaseService from "@/services/BaseService";
 
 export default class Competizioni extends BaseService {
 
-    static async getListaCompetizioniAperte(): Promise<any> {
+    static async getListaCompetizioniAperte(utente: number): Promise<any> {
         return await this.perform({
-            url: '/competizioni',
+            url: '/competizioni/aperte/'+ utente,
             method: 'GET',
         })
     }
     static async getCompetizioniAdmin(): Promise<any> {
         return await this.perform({
-            url: '/competizioni/admin',
+            url: '/competizioni',
             method: 'GET',
         })
     }

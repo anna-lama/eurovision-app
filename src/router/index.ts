@@ -5,17 +5,13 @@ import ListPage from "@/views/ListPage.vue";
 import ClassificaParziale from "@/views/ClassificaParziale.vue";
 import ClassificaTotale from "@/views/ClassificaTotale.vue";
 import AdminPage from "@/views/AdminPage.vue";
+import Competizioni from "@/views/Competizioni.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'Home',
     component: HomePage
-  },
-  {
-    path: '/',
-    name: 'List',
-    component: ListPage
   },
   {
     path: '/parziale',
@@ -31,6 +27,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/dashboardnascosta',
     name: 'AdminPage',
     component: AdminPage
+  },
+  {
+    path: '/',
+    name: 'Competizioni',
+    component: Competizioni
+  },
+  {
+    path: '/:competizione',
+    name: 'Competizione',
+    component: ListPage
   }
 ]
 

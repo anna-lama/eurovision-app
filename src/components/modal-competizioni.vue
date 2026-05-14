@@ -82,7 +82,15 @@ const router = useRouter()
 
 watch(() => props.isOpen, async (newVal) => {
     if (newVal) {
-        const response = await Competizioni.getListaCompetizioniAperte()
+        const user = sessionStorage.getItem("user")
+
+        if (!user) {
+            competizioni.value = []
+            errorMessage.value = "Utente non valido"
+            return
+        }
+
+        const response = await Competizioni.getListaCompetizioniAperte(Number(user))
         competizioni.value = response.error ? [] : response.data
     } else {
         closeConfirm()
