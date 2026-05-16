@@ -1,13 +1,13 @@
 <template>
     <div class="menu-container">
         <div style="display: flex; flex-direction: column">
-            <div class="tile" @click="router.push('/')">
+            <div class="tile" @click="navigate('/')">
                 <span>Home</span>
             </div>
-            <div class="tile" @click="router.push('/parziale')">
+            <div class="tile" @click="navigate('/parziale')">
                 <span>Classifica parziale</span>
             </div>
-            <div class="tile" @click="router.push('/totale')">
+            <div class="tile" @click="navigate('/totale')">
                 <span>Classifica totale</span>
             </div>
         </div>
@@ -17,11 +17,18 @@
 
 <script setup lang="ts">
 
+import { menuController } from "@ionic/vue";
 import router from "@/router";
 
-const logOut = () => {
+const navigate = async (path: string) => {
+    await router.push(path)
+    await menuController.close("main-menu")
+}
+
+const logOut = async () => {
     sessionStorage.clear()
-    router.push('/login')
+    await router.push('/login')
+    await menuController.close("main-menu")
 }
 </script>
 

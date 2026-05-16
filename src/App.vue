@@ -18,9 +18,9 @@
                         <ion-buttons slot="start" v-if="route.name !== 'Home'">
                             <ion-menu-button color="dark" />
                         </ion-buttons>
-                        <div style="height: 100%; width: 100%; display: flex; justify-content: end; align-items: center;">
+                        <div style="height: 100%; width: 100%; display: flex; justify-content: end; align-items: center; padding: 5px 15px;">
                             <img
-                                src="/logo_no_bg.png" alt="logo" style="max-height: 70px; height: auto; max-width: 100%;" />
+                                src="/logo_no_bg.png" alt="logo" style="max-height: 55px; height: auto; max-width: 100%;" />
                         </div>
                     </ion-toolbar>
                 </ion-header>
