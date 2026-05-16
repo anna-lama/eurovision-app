@@ -51,6 +51,7 @@ const registrati = async () => {
             response = await Utenti.aggiungiUtente(user.username,user.pin)
             if (!response.error) {
                 await sessionStorage.setItem("user", response.data.id)
+                await sessionStorage.setItem("isAdmin", String(Boolean(response.data.isAdmin)))
                 await router.push('/')
             } else {
                 errormsg.value = response.msg
@@ -71,6 +72,7 @@ const login = async () => {
             response = await Utenti.login(user.username, user.pin)
             if (!response.error) {
                 await sessionStorage.setItem("user", response.data.id)
+                await sessionStorage.setItem("isAdmin", String(Boolean(response.data.isAdmin)))
                 await router.push('/')
             } else {
                 errormsg.value = response.msg

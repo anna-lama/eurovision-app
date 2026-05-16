@@ -3,7 +3,7 @@
         <div class="container-title">
             <span>Classifica Totale</span>
         </div>
-        <classifica-components v-if="classifica.length > 0" :classifica="classifica"></classifica-components>
+        <classifica-component-total v-if="classifica.length > 0" :classifica="classifica"></classifica-component-total>
         <div v-else class="no-data">Nessuna canzone in classifica.</div>
     </div>
     <div v-else class="volevi">
@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
 import Classifica from "@/services/Classifica";
-import ClassificaComponents from "@/components/classifica-components.vue";
+import ClassificaComponentTotal from "@/components/classifica-component-total.vue";
 
 const isAvailable = ref(false)
 const classifica = ref([])
@@ -23,14 +23,15 @@ onMounted(async ()=> {
     await getClassificaTotale()
 })
 const getClassificaTotale = async () => {
-        const response = await Classifica.getClassificaTotale()
+        const competizione = JSON.parse(await sessionStorage.getItem('competizione') || "null")
+        if (!competizione) {
+            isAvailable.value = false
+            return
+        }
+        const response = await Classifica.getClassificaTotale(Number(competizione.id))
         if (!response.error) {
-            if (response.data.votanti == 100){
-                isAvailable.value = false
-            } else {
-                isAvailable.value = true
-                classifica.value = response.data.classifica
-            }
+            classifica.value = response.data.classifica
+            isAvailable.value = response.data.classifica.length > 0
         } else {
             console.log("Errore")
 

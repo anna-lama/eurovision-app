@@ -38,7 +38,7 @@ import CategoryPoints from "@/components/category-points.vue";
 
 const props = defineProps(['classifica'])
 
-const getColorClassifica =( index) => {
+const getColorClassifica =( index: number) => {
     if (index === 0) {
         return "#efc800"
     } else if (index === 1) {
