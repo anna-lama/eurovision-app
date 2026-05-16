@@ -51,7 +51,7 @@
     </div>
     <modal v-if="esibizioneModal" :is-open="openModal" :esibizione="esibizioneModal" @close="closeModal"></modal>
     <ion-toast class="custom-toast" position="top" position-anchor="header"
-               :is-open="openToast" :message="errormsg" :duration="2000"></ion-toast>
+               :is-open="openToast" :message="errormsg" :duration="20000000"></ion-toast>
 
 </template>
 
@@ -64,11 +64,12 @@ import {IonToast} from "@ionic/vue";
 
 const openModal = ref(false)
 const pressTimer = ref<any>(0)
-const punteggi = ref([])
-const esibizioneInCorso = ref({})
-const esibizioneModal = ref(null)
+const punteggi = ref<any[]>([])
+const esibizioneInCorso = ref<any>(null)
+const esibizioneModal = ref<any>(null)
 const openToast = ref(false)
 const errormsg = ref()
+const competizione = ref()
 
 onMounted( async()=>{
     await getList()
@@ -84,8 +85,10 @@ const scrollToAnchor = () =>{
 
 const getList = async () => {
     const user = await sessionStorage.getItem("user")
-    if (user){
-        const response = await Classifica.getClassificaHome(Number(user))
+    competizione.value = JSON.parse(await sessionStorage.getItem("competizione"))
+
+    if (user && competizione.value){
+        const response = await Classifica.getClassificaHome(Number(user), Number(competizione.value.id))
         if (!response.error) {
             punteggi.value = response.data
             esibizioneInCorso.value = punteggi.value.find(x => x.inCorso)
@@ -99,14 +102,22 @@ const closeModal = async () => {
     openModal.value = false
     await getList()
 }
-const openModalFunction = async (esibizione) => {
-    if(await getClassificaTotale()){
-        esibizioneModal.value = esibizione
-        openModal.value = true
+const openModalFunction = async (esibizione: any) => {
+    if(!competizione.value?.closed) {
+        if(!esibizione.competizione?.abilitaTotale ) {
+            esibizioneModal.value = esibizione
+            openModal.value = true
+        }
+    } else {
+        errormsg.value = "La modifica non è abilitata"
+        openToast.value = true
     }
+    
+    
+
 }
 
-function startPress(esibizione) {
+function startPress(esibizione: any) {
     pressTimer.value = setTimeout(() => {
         openModalFunction(esibizione)
     }, 800) // durata in ms
@@ -114,15 +125,6 @@ function startPress(esibizione) {
 
 function cancelPress() {
     clearTimeout(pressTimer.value)
-}
-
-const getClassificaTotale = async () => {
-    const response = await Classifica.getClassificaTotale()
-    if (!response.error) {
-        return response.data.votanti === 100;
-    } else {
-        console.log("Errore")
-    }
 }
 
 </script>

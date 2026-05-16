@@ -1,31 +1,31 @@
 import BaseService from "@/services/BaseService";
 
 export default class Classifica extends BaseService {
-    static async getClassificaHome(idUtente : number): Promise<any> {
+    static async getClassificaHome(idUtente : number, competizione: number): Promise<any> {
         return await this.perform({
-            url: '/classifica/home/'+ idUtente,
+            url: '/classifica/competizione/'+ competizione + '/home/' + idUtente,
             method: 'GET'
         })
     }
 
-    static async getClassificaParziale(idUtente : number): Promise<any> {
+    static async getClassificaParziale(idUtente : number, competizione: number): Promise<any> {
         return await this.perform({
-            url: '/classifica/'+ idUtente,
+            url: '/classifica/competizione/'+ competizione + '/personale/' + idUtente,
             method: 'GET'
         })
     }
-    static async getClassificaTotale(): Promise<any> {
+    static async getClassificaTotale(competizione: number): Promise<any> {
         return await this.perform({
-            url: '/classifica/',
+            url: '/classifica/competizione/'+ competizione + '/totale',
             method: 'GET'
         })
     }
-    static async abilitaTotale(total: boolean): Promise<any> {
+    static async abilitaTotale(competizione: number, total: boolean): Promise<any> {
         return await this.perform({
-            url: '/config/change',
+            url: '/competizioni/'+ competizione + '/totale',
             method: 'PATCH',
-            params:{
-                total : total
+            body:{
+                abilitaTotale : total
             }
         })
     }
