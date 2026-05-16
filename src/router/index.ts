@@ -6,6 +6,7 @@ import ClassificaParziale from "@/views/ClassificaParziale.vue";
 import ClassificaTotale from "@/views/ClassificaTotale.vue";
 import AdminPage from "@/views/AdminPage.vue";
 import Competizioni from "@/views/Competizioni.vue";
+import ListaUtenti from "@/views/ListaUtenti.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -27,6 +28,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/dashboardnascosta',
     name: 'AdminPage',
     component: AdminPage
+  },
+  {
+    path: '/utenti',
+    name: 'ListaUtenti',
+    component: ListaUtenti
   },
   {
     path: '/',
