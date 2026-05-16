@@ -25,14 +25,10 @@ export default class Utenti extends BaseService {
         })
     }
 
-    static async modificaUtente(id : number, value: boolean): Promise<any> {
+    static async promuoviAdmin(id: number): Promise<any> {
         return await this.perform({
-            url: '/utenti/edit',
-            method: 'PATCH',
-            body: {
-                id: id,
-                value: value
-            }
+            url: '/utenti/admin/' + id,
+            method: 'POST'
         })
     }
 

@@ -10,6 +10,12 @@
             <div class="tile" @click="navigate('/totale')">
                 <span>Classifica totale</span>
             </div>
+            <div v-if="isAdmin" class="tile" @click="navigate('/utenti')">
+                <span>Utenti</span>
+            </div>
+            <div v-if="isAdmin" class="tile" @click="navigate('/dashboard')">
+                <span>Dashboard</span>
+            </div>
         </div>
         <button class="btn btn-error" @click="logOut">LOGOUT</button>
     </div>
@@ -19,6 +25,9 @@
 
 import { menuController } from "@ionic/vue";
 import router from "@/router";
+import {computed} from "vue";
+
+const isAdmin = computed(() => sessionStorage.getItem("isAdmin") === "true")
 
 const navigate = async (path: string) => {
     await router.push(path)

@@ -25,14 +25,16 @@ const routes: Array<RouteRecordRaw> = [
     component: ClassificaTotale
   },
   {
-    path: '/dashboardnascosta',
+    path: '/dashboard',
     name: 'AdminPage',
-    component: AdminPage
+    component: AdminPage,
+    meta: { requiresAdmin: true }
   },
   {
     path: '/utenti',
     name: 'ListaUtenti',
-    component: ListaUtenti
+    component: ListaUtenti,
+    meta: { requiresAdmin: true }
   },
   {
     path: '/',
@@ -53,8 +55,11 @@ const router = createRouter({
 
 router.beforeEach(async(to, from, next) => {
   const isLoggedIn = sessionStorage.getItem("user");
+  const isAdmin = sessionStorage.getItem("isAdmin") === "true";
   if (!isLoggedIn && to.path !== '/login') {
     await router.push("/login");
+  } else if (to.meta.requiresAdmin && !isAdmin) {
+    await router.push("/");
   } else {
     next();
   }
