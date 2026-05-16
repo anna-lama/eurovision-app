@@ -3,7 +3,7 @@
         <div class="container-title">
             <span>La tua classifica</span>
         </div>
-        <classifica-components v-if="classifica.length > 0" :classifica="classifica"></classifica-components>
+        <classifica-component-personal v-if="classifica.length > 0" :classifica="classifica"></classifica-component-personal>
         <div v-else class="no-data">Nessuna canzone in classifica.</div>
     </div>
 </template>
@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
 import Classifica from "@/services/Classifica";
-import ClassificaComponents from "@/components/classifica-components.vue";
+import ClassificaComponentPersonal from "@/components/classifica-component-personal.vue";
 
 const classifica = ref([])
 
@@ -20,9 +20,9 @@ onMounted(async ()=> {
 })
 const getClassificaParziale = async () => {
     const idUtente = await sessionStorage.getItem('user')
-    const competizione = await sessionStorage.getItem('competizione')
+    const competizione = JSON.parse(await sessionStorage.getItem('competizione') || "null")
     if (idUtente && competizione) {
-        const response = await Classifica.getClassificaParziale(Number(idUtente), Number(competizione))
+        const response = await Classifica.getClassificaParziale(Number(idUtente), Number(competizione.id))
         if (!response.error) {
             classifica.value = response.data
         } else {
